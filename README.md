@@ -1,44 +1,58 @@
 # Project Olympus
 
-## Overview
-This repository hosts the updated Olympus project.
+A command-line tool that takes a product idea and gathers simulated stakeholder feedback on it. It uses CrewAI with OpenAI's GPT-4 to run a few agents, each playing a different Accounts Payable (AP) role, then compiles their feedback into a single markdown report.
 
-## Features
-- **Hierarchical Task Management:** Leverage the power of structured task execution to maintain a clean and scalable codebase.
-- **Asynchronous Tasks:** Improve performance with non-blocking operations, allowing tasks to run concurrently.
-- **Callbacks:** Ensure that each task can trigger subsequent actions upon completion, enabling a reactive task flow.
-- **Expected Outputs:** Define the anticipated results for each task, streamlining debugging and ensuring quality control.
+I built it as a hackathon project to try out agent-based workflows with CrewAI.
 
-## Installation
-To get started, clone the repository and install the necessary dependencies.
+## What it does
+
+You enter a product idea. The tool runs several agents, each playing an AP stakeholder:
+
+- AP Processor
+- Director of Accounts Payable
+- System Administrator
+
+Each one reviews the idea and lists the features that would help in their role and their main concerns. A final compiler agent collects all of the feedback into one markdown document, grouped by feature and noting which roles asked for each.
+
+The result is saved as a markdown file.
+
+## Tools used
+
+- Python
+- CrewAI and crewai_tools
+- LangChain with OpenAI GPT-4
+- Serper API for web search
+- python-dotenv
+
+## Run it locally
+
+You need an OpenAI API key and a Serper API key.
+
+1. Clone the repo and install dependencies:
+   ```
+   git clone https://github.com/ajcondondev/project_olympus.git
+   cd project_olympus
+   poetry install --no-root
+   # or
+   pip install -r requirements.txt
+   ```
+2. Copy `.env.example` to `.env` and fill in `OPENAI_API_KEY` and `SERPER_API_KEY`.
+3. Run it:
+   ```
+   python main.py
+   ```
+   It asks for a product idea, then runs the agents and writes the report.
+
+## Project structure
 
 ```
-git clone https://github.com/ajcondondev/project_olympus.git
-cd project_olympus
-poetry install --no-root
-# OR
-pip install -r requirements.txt
+main.py       entry point; sets up the agents and tasks and runs them
+agents.py     the agent definitions (the AP stakeholder roles)
+tasks.py      the tasks the agents run
+file_io.py    saves the output to a markdown file
+tools/        tools the agents can use
 ```
 
-## Usage
-To run Olympus, execute the main script after setting up your environment variables and configuration.
-Rename the .env.example file to .env and fill in the required environment variables for OPENAI_API_KEY & SERPER_API_KEY
+## Notes
 
-``` 
-python main.py
-
-```
-
-## Structure
-main.py: The entry point script that initializes the agents and tasks, and forms the AI crew.
-
-agents.py: Defines various agents like the editor, news fetcher, news analyzer, and newsletter compiler.
-
-tasks.py: Contains the task definitions that are used by the agents to perform specific operations.
-
-file_io.py: Manages file input/output operations, crucial for handling the async flow of data.
-
-
-
-
-#
+There is no live demo. It runs from the command line and needs API keys, so it is not something I can host as a static page. Running it uses your OpenAI API quota.
